@@ -1,0 +1,10 @@
+{
+  "theme": "dark",
+  "accent_color": "purple",
+  "start_with_windows": false,
+  "run_as_admin": false,
+  "minimize_to_tray": true,
+  "create_backup": true,
+  "show_confirmation": true,
+  "schedule_cleaning": "never"
+}
