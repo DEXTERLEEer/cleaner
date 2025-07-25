@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEXTER PC Optimizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <div class="logo-container">
+                <i class="fas fa-cog fa-spin logo-icon"></i>
+                <h1 class="logo-text">DEXTER</h1>
+                <p class="logo-subtitle">PC Optimizer</p>
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="main-app d-none">
+        <!-- Custom Title Bar -->
+        <div class="title-bar">
+            <div class="title-content">
+                <div class="title-left">
+                    <i class="fas fa-cog title-icon"></i>
+                    <span class="title-text">DEXTER PC Optimizer</span>
+                    <span class="version-badge">v2.0</span>
+                </div>
+                <div class="title-right">
+                    <button id="admin-btn" class="admin-btn" title="Request Admin Privileges">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Run as Admin</span>
+                    </button>
+                    <div class="window-controls">
+                        <button class="control-btn minimize-btn"><i class="fas fa-minus"></i></button>
+                        <button class="control-btn maximize-btn"><i class="fas fa-square"></i></button>
+                        <button class="control-btn close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid main-container">
+            <div class="row h-100">
+                <!-- Left Sidebar - System Dashboard -->
+                <div class="col-md-3 sidebar">
+                    <div class="dashboard-card">
+                        <h5 class="dashboard-title">
+                            <i class="fas fa-chart-pie"></i>
+                            System Dashboard
+                        </h5>
+                        
+                        <!-- Storage Visualization -->
+                        <div class="storage-section">
+                            <h6>Storage Overview</h6>
+                            <div class="storage-bar-container">
+                                <div class="storage-label">Current Free Space</div>
+                                <div class="storage-bar">
+                                    <div id="free-space-bar" class="storage-progress"></div>
+                                    <span id="free-space-text" class="storage-text">0 GB Free</span>
+                                </div>
+                            </div>
+                            <div class="storage-bar-container">
+                                <div class="storage-label">Space After Cleaning</div>
+                                <div class="storage-bar">
+                                    <div id="recovery-bar" class="storage-progress recovery"></div>
+                                    <span id="recovery-text" class="storage-text">+0 GB Recoverable</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real-Time Monitoring -->
+                        <div class="monitoring-section">
+                            <h6>System Performance</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="gauge-container">
+                                        <div class="circular-gauge" id="cpu-gauge">
+                                            <div class="gauge-inner">
+                                                <span class="gauge-value" id="cpu-value">0%</span>
+                                                <span class="gauge-label">CPU</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="gauge-container">
+                                        <div class="circular-gauge" id="ram-gauge">
+                                            <div class="gauge-inner">
+                                                <span class="gauge-value" id="ram-value">0%</span>
+                                                <span class="gauge-label">RAM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Status -->
+                        <div class="admin-status">
+                            <div class="status-indicator">
+                                <i id="admin-icon" class="fas fa-shield-alt"></i>
+                                <span id="admin-status-text">Checking privileges...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="col-md-9 main-content">
+                    <!-- Navigation Tabs -->
+                    <div class="navigation-tabs">
+                        <button class="nav-tab active" data-tab="basic">
+                            <i class="fas fa-broom"></i>
+                            Basic
+                        </button>
+                        <button class="nav-tab" data-tab="advanced">
+                            <i class="fas fa-cogs"></i>
+                            Advanced
+                        </button>
+                        <button class="nav-tab" data-tab="browser">
+                            <i class="fas fa-globe"></i>
+                            Browser
+                        </button>
+                        <button class="nav-tab" data-tab="gaming">
+                            <i class="fas fa-gamepad"></i>
+                            Gaming
+                        </button>
+                        <button class="nav-tab" data-tab="duplicates">
+                            <i class="fas fa-copy"></i>
+                            Duplicates
+                        </button>
+                        <button class="nav-tab" data-tab="settings">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <!-- Basic Cleaning Tab -->
+                        <div id="basic-tab" class="tab-pane active">
+                            <div class="content-header">
+                                <h3>Basic System Cleanup</h3>
+                                <p>Clean temporary files, recycle bin, and system cache</p>
+                            </div>
+                            
+                            <!-- Cleaning Categories Display -->
+                            <div class="cleaning-categories">
+                                <h4>BASIC CLEANING <span class="select-all-btn">Select All</span></h4>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="temp-files" checked>
+                                    <label for="temp-files">🗑️ Temp Files</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="temp-folder" checked>
+                                    <label for="temp-folder">📁 %TEMP% Folder</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="browser-cache" checked>
+                                    <label for="browser-cache">🌐 Browser Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="downloads-folder" checked>
+                                    <label for="downloads-folder">📥 Downloads Folder</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="dns-cache" checked>
+                                    <label for="dns-cache">🌍 Flush DNS Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="clipboard" checked>
+                                    <label for="clipboard">📋 Clear Clipboard</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="recent-docs" checked>
+                                    <label for="recent-docs">📄 Recent Documents</label>
+                                </div>
+                            </div>
+                            <div class="scan-section">
+                                <button id="clean-all-btn" class="scan-button">
+                                    <i class="fas fa-broom"></i>
+                                    <span>Clean All</span>
+                                    <div class="button-glow"></div>
+                                </button>
+                                <div id="scan-progress" class="scan-progress d-none">
+                                    <div class="progress-bar">
+                                        <div id="progress-fill" class="progress-fill"></div>
+                                    </div>
+                                    <div class="progress-text">
+                                        <span id="progress-status">Scanning...</span>
+                                        <span id="progress-percent">0%</span>
+                                    </div>
+                                    <div class="particles-container">
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="files-list" class="files-list d-none">
+                                <div class="files-header">
+                                    <h5>Files to Delete</h5>
+                                    <div class="selection-controls">
+                                        <button id="select-all" class="btn btn-sm btn-outline-purple">Select All</button>
+                                        <button id="select-none" class="btn btn-sm btn-outline-purple">Select None</button>
+                                    </div>
+                                </div>
+                                <div id="files-container" class="files-container"></div>
+                                <div class="clean-section">
+                                    <button id="clean-btn" class="clean-button">
+                                        <i class="fas fa-trash-alt"></i>
+                                        <span>Clean Selected Files</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Tab -->
+                        <div id="advanced-tab" class="tab-pane">
+                            <div class="content-header">
+                                <h3>Advanced Cleanup</h3>
+                                <p>Registry cleaning, system logs, and deep system cleanup</p>
+                            </div>
+                            
+                            <!-- Advanced Cleaning Categories -->
+                            <div class="cleaning-categories">
+                                <h4>ADVANCED CLEANING <span class="select-all-btn">Select All</span></h4>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="directx-cache">
+                                    <label for="directx-cache">🎮 DirectX Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="nvidia-cache">
+                                    <label for="nvidia-cache">📺 NVIDIA Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="thumbnail-cache">
+                                    <label for="thumbnail-cache">🖼️ Thumbnail Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="windows-logs">
+                                    <label for="windows-logs">📊 Windows Logs</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="crash-dumps">
+                                    <label for="crash-dumps">⚠️ Crash Dumps</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="windows-defender">
+                                    <label for="windows-defender">🛡️ Windows Defender</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="java-cache">
+                                    <label for="java-cache">☕ Java Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="onedrive-cache">
+                                    <label for="onedrive-cache">☁️ OneDrive Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="event-logs">
+                                    <label for="event-logs">📋 Event Logs</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="font-cache">
+                                    <label for="font-cache">🔤 Font Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="store-cache">
+                                    <label for="store-cache">🏪 Store Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="update-cache">
+                                    <label for="update-cache">🔄 Update Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="icon-cache">
+                                    <label for="icon-cache">🎯 Icon Cache</label>
+                                </div>
+                            </div>
+                            
+                            <div class="scan-section">
+                                <button id="scan-advanced-btn" class="scan-button">
+                                    <i class="fas fa-search"></i>
+                                    <span>Scan Advanced</span>
+                                    <div class="button-glow"></div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Browser Tab -->
+                        <div id="browser-tab" class="tab-pane">
+                            <div class="content-header">
+                                <h3>Browser Cleanup</h3>
+                                <p>Clear browser cache, cookies, and temporary internet files</p>
+                            </div>
+                            
+                            <!-- Browser Cleaning Categories -->
+                            <div class="cleaning-categories">
+                                <h4>BROWSER CLEANING <span class="select-all-btn">Select All</span></h4>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="browser-history">
+                                    <label for="browser-history">🕒 Browser History</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="browser-cookies">
+                                    <label for="browser-cookies">🍪 Browser Cookies</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="saved-passwords" disabled>
+                                    <label for="saved-passwords">🔐 Saved Passwords</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="autofill-data">
+                                    <label for="autofill-data">📝 Autofill Data</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="session-data">
+                                    <label for="session-data">💾 Session Data</label>
+                                </div>
+                                <h5>BROWSER SPECIFIC</h5>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="chrome-cookies">
+                                    <label for="chrome-cookies">🌐 Chrome Cookies</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="firefox-cookies">
+                                    <label for="firefox-cookies">🦊 Firefox Cookies</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="edge-cookies">
+                                    <label for="edge-cookies">🔷 Edge Cookies</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="opera-cookies">
+                                    <label for="opera-cookies">🎭 Opera Cookies</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="brave-cookies">
+                                    <label for="brave-cookies">🦁 Brave Cookies</label>
+                                </div>
+                            </div>
+                            
+                            <div class="scan-section">
+                                <button id="scan-browser-btn" class="scan-button">
+                                    <i class="fas fa-search"></i>
+                                    <span>Scan Browser</span>
+                                    <div class="button-glow"></div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Gaming Tab -->
+                        <div id="gaming-tab" class="tab-pane">
+                            <div class="content-header">
+                                <h3>Gaming Cache Cleanup</h3>
+                                <p>Clean gaming platform cache and temporary files</p>
+                            </div>
+                            
+                            <!-- Gaming Cleaning Categories -->
+                            <div class="cleaning-categories">
+                                <h4>GAMING CACHE <span class="select-all-btn">Select All</span></h4>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="steam-cache">
+                                    <label for="steam-cache">🎮 Steam Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="epic-games-cache">
+                                    <label for="epic-games-cache">🎯 Epic Games Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="origin-cache">
+                                    <label for="origin-cache">🎲 Origin Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="adobe-cache">
+                                    <label for="adobe-cache">🎨 Adobe Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="spotify-cache">
+                                    <label for="spotify-cache">🎵 Spotify Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="discord-cache">
+                                    <label for="discord-cache">💬 Discord Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="teams-cache">
+                                    <label for="teams-cache">👥 Teams Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="vscode-cache">
+                                    <label for="vscode-cache">💻 Visual Studio Cache</label>
+                                </div>
+                                <div class="cleaning-item">
+                                    <input type="checkbox" id="npm-cache">
+                                    <label for="npm-cache">📦 NPM Cache</label>
+                                </div>
+                            </div>
+                            
+                            <div class="scan-section">
+                                <button id="scan-gaming-btn" class="scan-button">
+                                    <i class="fas fa-search"></i>
+                                    <span>Scan Gaming</span>
+                                    <div class="button-glow"></div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Duplicates Tab -->
+                        <div id="duplicates-tab" class="tab-pane">
+                            <div class="content-header">
+                                <h3>Duplicate File Finder</h3>
+                                <p>Find and remove duplicate files to free up space</p>
+                            </div>
+                            <div class="duplicate-finder">
+                                <div class="finder-controls">
+                                    <input type="text" id="scan-directory" placeholder="Directory to scan" value="/">
+                                    <button id="find-duplicates-btn" class="btn btn-purple">
+                                        <i class="fas fa-search"></i>
+                                        Find Duplicates
+                                    </button>
+                                </div>
+                                <div id="duplicates-results" class="duplicates-results d-none"></div>
+                            </div>
+                        </div>
+
+                        <!-- Settings Tab -->
+                        <div id="settings-tab" class="tab-pane">
+                            <div class="content-header">
+                                <h3>Settings</h3>
+                                <p>Configure DEXTER PC Optimizer preferences</p>
+                            </div>
+                            <div class="settings-grid">
+                                <div class="setting-card">
+                                    <h5>Sound Effects</h5>
+                                    <label class="switch">
+                                        <input type="checkbox" id="sound-toggle" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-card">
+                                    <h5>Auto-start with Windows</h5>
+                                    <label class="switch">
+                                        <input type="checkbox" id="autostart-toggle">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-card">
+                                    <h5>Theme</h5>
+                                    <select class="form-select">
+                                        <option selected>Dark Purple</option>
+                                        <option>Light</option>
+                                        <option>High Contrast</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cleanup Results Modal -->
+    <div class="modal fade" id="resultsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle text-success"></i>
+                        Cleanup Complete
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="results-summary">
+                        <div class="result-stat">
+                            <div class="stat-value" id="freed-space">0 GB</div>
+                            <div class="stat-label">Space Freed</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="stat-value" id="files-cleaned">0</div>
+                            <div class="stat-label">Files Cleaned</div>
+                        </div>
+                    </div>
+                    <div class="result-actions">
+                        <button id="download-log-btn" class="btn btn-outline-purple">
+                            <i class="fas fa-download"></i>
+                            Download Log
+                        </button>
+                        <button id="undo-cleanup-btn" class="btn btn-outline-warning">
+                            <i class="fas fa-undo"></i>
+                            Undo Cleanup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
